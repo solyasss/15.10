@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 
-public class Academy_Group
+public class Academy_Group : ICloneable
 {
     private ArrayList students;
     private int count;
@@ -34,14 +34,14 @@ public class Academy_Group
         Console.WriteLine("Can not find student");
     }
 
-    public void edit(string surname, Student new_st)
+    public void edit(string surname, Student new_student)
     {
         for (int i = 0; i < students.Count; i++)
         {
             Student student = (Student)students[i];
             if (student.Surname == surname)
             {
-                students[i] = new_st;
+                students[i] = new_student;
                 Console.WriteLine("You updated student info");
                 return;
             }
@@ -51,14 +51,29 @@ public class Academy_Group
 
     public void print()
     {
-        Console.WriteLine("Academy Group:");
+        Console.WriteLine("Academy group:");
         foreach (Student student in students)
         {
             student.print();
         }
     }
 
-    // сохраняю в бинарный файл
+    public void sort(IComparer comparer)
+    {
+        students.Sort(comparer);
+        Console.WriteLine("Sorted!");
+    }
+
+    public object Clone() 
+    {
+        Academy_Group new_group = new Academy_Group();
+        foreach (Student student in students)
+        {
+            new_group.add((Student)student.Clone());
+        }
+        return new_group;
+    }
+
     public void save(string filePath)
     {
         try
@@ -66,7 +81,7 @@ public class Academy_Group
             using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             using (BinaryWriter writer = new BinaryWriter(fs))
             {
-                writer.Write(students.Count); // записываем количество студентов
+                writer.Write(students.Count); 
 
                 foreach (Student student in students)
                 {
@@ -86,7 +101,6 @@ public class Academy_Group
         }
     }
 
-    // загружаю инфо из бин файла 
     public void load(string filePath)
     {
         try
@@ -97,7 +111,7 @@ public class Academy_Group
                 using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 using (BinaryReader reader = new BinaryReader(fs))
                 {
-                    int studentCount = reader.ReadInt32(); // принимаю количество студентов 
+                    int studentCount = reader.ReadInt32(); 
 
                     for (int i = 0; i < studentCount; i++)
                     {
