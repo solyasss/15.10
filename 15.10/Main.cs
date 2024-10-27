@@ -11,6 +11,7 @@ class Main_Class
         Academy_Group group = new Academy_Group();
         string filePath = "students.dat";
 
+        Academy_Group new_group = null;
         while (true)
         {
             Console.WriteLine("\n-----Academy menu-----");
@@ -60,6 +61,19 @@ class Main_Class
                         sort(group);
                         break;
                     case 9:
+                        new_group = (Academy_Group)group.Clone();
+                        Console.WriteLine("Cloned!");
+                        break;
+                    case 10:
+                        if (new_group != null)
+                            new_group.print();
+                        else
+                            Console.WriteLine("Not found");
+                        break;
+                    case 11:
+                        print_enum(group);
+                        break;
+                    case 12:
                         return;
                     default:
                         Console.WriteLine("Incorrect choice");
@@ -70,6 +84,15 @@ class Main_Class
             {
                 Console.WriteLine($"Error: {ex.Message}");
             }
+        }
+    }
+    // реализация 
+    private static void print_enum(Academy_Group group)
+    {
+        Console.WriteLine("Students:");
+        foreach (Student student in group)
+        {
+            student.print(); 
         }
     }
     private static void sort_average(Academy_Group group)

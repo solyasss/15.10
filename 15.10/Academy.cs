@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 
-public class Academy_Group : ICloneable
+public class Academy_Group : ICloneable, IEnumerable
 {
     private ArrayList students;
     private int count;
@@ -64,7 +64,7 @@ public class Academy_Group : ICloneable
         Console.WriteLine("Sorted!");
     }
 
-    public object Clone() 
+    public object Clone()
     {
         Academy_Group new_group = new Academy_Group();
         foreach (Student student in students)
@@ -81,7 +81,7 @@ public class Academy_Group : ICloneable
             using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
             using (BinaryWriter writer = new BinaryWriter(fs))
             {
-                writer.Write(students.Count); 
+                writer.Write(students.Count);
 
                 foreach (Student student in students)
                 {
@@ -111,7 +111,7 @@ public class Academy_Group : ICloneable
                 using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                 using (BinaryReader reader = new BinaryReader(fs))
                 {
-                    int studentCount = reader.ReadInt32(); 
+                    int studentCount = reader.ReadInt32();
 
                     for (int i = 0; i < studentCount; i++)
                     {
@@ -151,5 +151,13 @@ public class Academy_Group : ICloneable
             }
         }
         Console.WriteLine("Can not find student");
+    }
+    // метод getenumerator
+    public IEnumerator GetEnumerator()
+    {
+        for (int i = 0; i < students.Count; i++)
+        {
+            yield return students[i]; 
+        }
     }
 }
