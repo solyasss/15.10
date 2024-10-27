@@ -2,10 +2,11 @@
 using System.Collections;
 using System.IO;
 
-public class Academy_Group : ICloneable, IEnumerable
+public class Academy_Group : ICloneable, IEnumerable,IEnumerator
 {
     private ArrayList students;
     private int count;
+    private int pos= -1; // для ienumerator
 
     public Academy_Group()
     {
@@ -152,12 +153,38 @@ public class Academy_Group : ICloneable, IEnumerable
         }
         Console.WriteLine("Can not find student");
     }
-    // метод getenumerator
     public IEnumerator GetEnumerator()
     {
-        for (int i = 0; i < students.Count; i++)
+        return this;
+    }
+    
+    #region enumerator
+    // перемещаю к след
+    public bool MoveNext()
+    {
+        if (pos < students.Count - 1)
         {
-            yield return students[i]; 
+            pos++;
+            return true;
+        }
+        Reset(); // сброс в конеу
+        return false;
+    }
+
+    public void Reset()
+    {
+        pos = -1;
+    }
+
+    public object Current
+    {
+        get
+        {
+            if (pos == -1 || pos>= students.Count)
+                throw new InvalidOperationException();
+            return students[pos]; // возвращаю текущий элемент 
         }
     }
 }
+#endregion enumerator
+
